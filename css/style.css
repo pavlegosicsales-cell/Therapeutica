@@ -667,21 +667,11 @@ input, textarea, select { font-family: var(--sans); }
   font-style: italic;
   color: var(--gold);
 }
-.hero__h1-em {
-  background: linear-gradient(
-    105deg,
-    var(--gold) 0%,
-    var(--gold-lt) 36%,
-    #ffe899 50%,
-    var(--gold-lt) 64%,
-    var(--gold) 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gold-shimmer 4s linear infinite;
-}
+/* NOTE: the gold gradient is deliberately NOT painted on this <em>.
+   background-clip:text here clips the gradient to the element's ENTIRE text
+   subtree, so all three cycling words get painted at once — stacked on top of
+   each other — no matter what opacity the individual words carry. The gradient
+   is applied per rendered word in the WORD CYCLE block instead. */
 
 .hero__tagline {
   display: inline-flex;
@@ -2206,13 +2196,34 @@ input, textarea, select { font-family: var(--sans); }
   top: 0;
   display: block;
   opacity: 0;
-  transform: translateY(44px);
-  transition: opacity 0.4s ease-out,
-              transform 0.4s cubic-bezier(0.34, 1.1, 0.64, 1);
+  /* Rest state sits a full box-height below, so an inactive word is always
+     clipped by the container's overflow:hidden instead of sitting on top of
+     the visible one. Must stay in em, not px — the h1 is clamp()-scaled. */
+  transform: translateY(1.15em);
+  transition: opacity 0.3s ease-out 0.18s,
+              transform 0.42s cubic-bezier(0.34, 1.1, 0.64, 1) 0.18s;
   color: var(--gold);
-  -webkit-text-fill-color: var(--gold); /* override transparent inherited from parent background-clip */
   font-style: italic;
   white-space: nowrap;
+}
+/* Gold gradient painted per rendered word (not on the parent <em> — see the
+   note next to .hero__h1 em above). Each word masks its own gradient, so the
+   word's opacity actually controls what is on screen. */
+.word-cycle__item,
+.hero__h1-static {
+  background: linear-gradient(
+    105deg,
+    var(--gold) 0%,
+    var(--gold-lt) 36%,
+    #ffe899 50%,
+    var(--gold-lt) 64%,
+    var(--gold) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 4s linear infinite;
 }
 .word-cycle__item.wc-active {
   opacity: 1;
@@ -2220,9 +2231,10 @@ input, textarea, select { font-family: var(--sans); }
 }
 .word-cycle__item.wc-past {
   opacity: 0;
-  transform: translateY(-32px);
-  transition: opacity 0.35s ease-in,
-              transform 0.35s ease-in;
+  /* Exits fast and fully clears the box before the incoming word lands */
+  transform: translateY(-1.15em);
+  transition: opacity 0.22s ease-in,
+              transform 0.28s ease-in;
 }
 
 /* About section — scoped overrides for light background */

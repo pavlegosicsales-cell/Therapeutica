@@ -423,18 +423,25 @@
 
     let current = 0;
 
-    // Measure max width to prevent layout jump
-    let maxW = 0;
-    items.forEach(el => {
-      el.style.position = 'relative';
-      el.style.display = 'inline-block';
-      el.style.opacity = '1';
-      if (el.offsetWidth > maxW) maxW = el.offsetWidth;
-      el.style.position = '';
-      el.style.display = '';
-      el.style.opacity = '';
-    });
-    container.style.width = maxW + 'px';
+    // Measure max width to prevent layout jump. Measured on a throwaway probe
+    // (never on the live items — flipping their opacity to measure would flash
+    // all three words at once) and re-run once the webfont lands, since the
+    // fallback font's metrics give a wrong slot width.
+    const measure = () => {
+      const probe = document.createElement('span');
+      probe.className = 'word-cycle__item';
+      probe.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;opacity:0;transition:none';
+      container.appendChild(probe);
+      let maxW = 0;
+      items.forEach(el => {
+        probe.textContent = el.textContent;
+        if (probe.offsetWidth > maxW) maxW = probe.offsetWidth;
+      });
+      container.removeChild(probe);
+      container.style.width = maxW + 'px';
+    };
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 
     // Activate first word — after one frame so transition fires consistently
     requestAnimationFrame(() => {
