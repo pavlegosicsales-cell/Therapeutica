@@ -415,52 +415,6 @@
     render();
   }
 
-  /* ── Word cycle (Hero H1) ── */
-  function initWordCycle() {
-    const items = Array.from(document.querySelectorAll('.word-cycle__item'));
-    const container = document.querySelector('.word-cycle');
-    if (!items.length || !container) return;
-
-    let current = 0;
-
-    // Measure max width to prevent layout jump. Measured on a throwaway probe
-    // (never on the live items — flipping their opacity to measure would flash
-    // all three words at once) and re-run once the webfont lands, since the
-    // fallback font's metrics give a wrong slot width.
-    const measure = () => {
-      const probe = document.createElement('span');
-      probe.className = 'word-cycle__item';
-      probe.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;opacity:0;transition:none';
-      container.appendChild(probe);
-      let maxW = 0;
-      items.forEach(el => {
-        probe.textContent = el.textContent;
-        if (probe.offsetWidth > maxW) maxW = probe.offsetWidth;
-      });
-      container.removeChild(probe);
-      container.style.width = maxW + 'px';
-    };
-    measure();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-
-    // Activate first word — after one frame so transition fires consistently
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => items[0].classList.add('wc-active'));
-    });
-
-    setInterval(() => {
-      const prev = current;
-      current = (current + 1) % items.length;
-
-      items[prev].classList.remove('wc-active');
-      items[prev].classList.add('wc-past');
-      // One frame delay ensures outgoing transition starts before incoming
-      requestAnimationFrame(() => items[current].classList.add('wc-active'));
-
-      setTimeout(() => items[prev].classList.remove('wc-past'), 500);
-    }, 2400);
-  }
-
   /* ── Kontakt form hover → heading color swap ── */
   function initKontaktHover() {
     const kontaktForm = document.querySelector('.kontakt__form');
@@ -1363,7 +1317,6 @@
   initGlowButtons();
   initTypewriter();
   initProgramiShader();
-  initWordCycle();
   initKontaktHover();
   initKontaktTilt();
   initOrbitalBenefits();

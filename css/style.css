@@ -2181,7 +2181,7 @@ input, textarea, select { font-family: var(--sans); }
   display: block;
   margin-top: 0;
 }
-.hero__h1-static { display: none; }
+.hero__h1-static { display: inline-block; white-space: nowrap; }
 .word-cycle {
   position: relative;
   display: inline-block;
@@ -2576,8 +2576,7 @@ input, textarea, select { font-family: var(--sans); }
     margin-top: 22px;
   }
   .hero__h1::before { display: none; }
-  .hero__h1 .word-cycle { display: none; }
-  .hero__h1 .hero__h1-static { display: inline; }
+  .hero__h1 .hero__h1-static { white-space: normal; }
 
   .hero__desc     { order: 4; }
   .hero__actions  { order: 5; flex-wrap: wrap; }
@@ -4774,4 +4773,18 @@ input, textarea, select { font-family: var(--sans); }
 
 @media (max-width: 480px) {
   .order-modal__card { padding: 32px 20px 28px; }
+}
+
+
+/* ─── CTA dugmad u redu (Započni / Zakaži seansu) ─── */
+.cta-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+}
+.cta-card .btn--gold-outline { margin-top: 14px; }
+@media (max-width: 640px) {
+  .cta-btn-row { flex-direction: column; align-items: stretch; }
 }
