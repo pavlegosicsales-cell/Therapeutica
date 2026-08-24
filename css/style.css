@@ -706,7 +706,7 @@ input, textarea, select { font-family: var(--sans); }
 .hero__actions {
   display: flex;
   gap: 14px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin-bottom: 60px;
 }
 
@@ -4777,6 +4777,14 @@ input, textarea, select { font-family: var(--sans); }
 
 
 /* ─── CTA dugmad u redu (Započni / Zakaži seansu) ─── */
+/* Pilulasti outline — da se poklopi sa .btn--shiny--cta parom */
+.btn--pill {
+  border-radius: 100px;
+  padding: 15px 42px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+}
+.hero__actions .btn { flex: 0 0 auto; }
 .cta-btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -4784,7 +4792,9 @@ input, textarea, select { font-family: var(--sans); }
   justify-content: center;
   align-items: center;
 }
-.cta-card .btn--gold-outline { margin-top: 14px; }
 @media (max-width: 640px) {
   .cta-btn-row { flex-direction: column; align-items: stretch; }
+  /* Kad se rasteže na punu širinu, tekst mora da bude centriran u oba dugmeta */
+  .cta-btn-row .btn,
+  .cta-btn-row .btn--shiny { justify-content: center; }
 }
